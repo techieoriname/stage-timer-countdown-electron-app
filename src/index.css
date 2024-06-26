@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes flash {
+    0%, 100% {
+        background-color: black;
+        color: red;
+    }
+    50% {
+        background-color: red;
+        color: white;
+    }
+}
+
+.bg-flash {
+    animation: flash 1s infinite;
+}
+
+.animate-flash {
+    animation: flash 1s infinite;
+}
+
+/* Disable text selection */
+.no-select {
+    user-select: none;
+}
+
+input, button {
+    outline: none;
+}
+
+div[tabindex="0"] {
+    /*outline: none;*/
+    user-select: none;
+}

@@ -1,0 +1,7 @@
+*.html
+*.log
+.github
+.nyc_output
+node_modules
+*.json
+yarn.lock
