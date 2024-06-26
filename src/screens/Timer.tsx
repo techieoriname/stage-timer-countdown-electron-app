@@ -11,7 +11,13 @@ const Timer = () => {
             setTimeUp(false); // Reset timeUp state when starting a new timer
         };
 
+        const handleResetTimer = () => {
+            setTime(0);
+            setTimeUp(false);
+        };
+
         window.electron.onStartTimer(handleStartTimer);
+        window.electron.onResetTimer(handleResetTimer);
 
         const handleFlashStateChange = (event: any, state: boolean) => {
             setEnableFlash(state);
@@ -21,6 +27,7 @@ const Timer = () => {
 
         return () => {
             window.electron.onStartTimer(null);
+            window.electron.onResetTimer(null);
             window.electron.onFlashStateChange(null);
         };
     }, []);

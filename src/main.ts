@@ -83,3 +83,9 @@ ipcMain.on("set-flash-state", (event, state) => {
         timerWindow.webContents.send('set-flash-state', state);
     }
 })
+
+ipcMain.on('reset-timer', () => {
+    if (timerWindow) {
+        timerWindow.webContents.send('reset-timer');
+    }
+});

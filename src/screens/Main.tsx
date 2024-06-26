@@ -12,6 +12,12 @@ const Main = () => {
         window.electron.startTimer(totalTimeInSeconds);
     };
 
+    const handleReset = () => {
+        setMinutes(0);
+        setSeconds(0);
+        window.electron.resetTimer();
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, type: "minutes" | "seconds") => {
         if (e.key === "ArrowUp") {
             if (type === "minutes") {
@@ -68,6 +74,12 @@ const Main = () => {
                 onClick={handleStart}
             >
                 Start
+            </button>
+            <button
+                className="bg-yellow-500 text-white p-2 rounded mb-4"
+                onClick={handleReset}
+            >
+                Reset
             </button>
             <button
                 className="bg-red-500 text-white p-2 rounded"
