@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd926606-728f-441e-96d1-ff55a963af37" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/electron.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/Main.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/Timer.tsx" afterDir="false" />
+    <list default="true" id="fd926606-728f-441e-96d1-ff55a963af37" name="Changes" comment="initial countdown timer app setup">
+      <change beforePath="$PROJECT_DIR$/src/electron.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/electron.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Timer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Timer.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +25,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "techieoriname"
+  }
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/techieoriname/stage-timer-countdown-app.git",
@@ -93,11 +95,36 @@
       <workItem from="1719243175605" duration="4075000" />
       <workItem from="1719312261601" duration="4430000" />
       <workItem from="1719351276057" duration="1756000" />
-      <workItem from="1719386385073" duration="2316000" />
+      <workItem from="1719386385073" duration="2715000" />
     </task>
+    <task id="LOCAL-00001" summary="initial countdown timer app setup">
+      <option name="closed" value="true" />
+      <created>1719388931853</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1719388931853</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial countdown timer app setup" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial countdown timer app setup" />
+  </component>
+  <component name="WfRunsListSearchHistory"><![CDATA[{
+  "history": [
+    {
+      "branch": "main",
+      "currentBranchFilter": true
+    }
+  ],
+  "lastFilter": {
+    "branch": "main",
+    "currentBranchFilter": true
+  }
+}]]></component>
 </project>

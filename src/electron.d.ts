@@ -1,6 +1,6 @@
 interface ElectronAPI {
-    startTimer: (time: number, flashOnTimeOut: boolean) => void;
-    onStartTimer: (callback: (event: any, { time: number, flashOnTimeout: boolean}) => void) => void;
+    startTimer: (time: number) => void;
+    onStartTimer: (callback: (event: any, { time: number}) => void) => void;
     setFlashState: (state: boolean) => void;
     onFlashStateChange: (callback: (event: any, state: boolean) => void) => void;
 }

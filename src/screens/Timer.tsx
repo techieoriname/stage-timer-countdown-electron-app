@@ -4,12 +4,10 @@ const Timer = () => {
     const [time, setTime] = useState(0);
     const [timeUp, setTimeUp] = useState(false);
     const [enableFlash, setEnableFlash] = useState(true);
-    const [flashOnTimeout, setFlashOnTimeout] = useState(true);
 
     useEffect(() => {
-        const handleStartTimer = (event: any, { time: totalTimeInSeconds, flashOnTimeout }: { time: number, flashOnTimeout: boolean }) => {
+        const handleStartTimer = (event: any, { time: totalTimeInSeconds }: { time: number }) => {
             setTime(totalTimeInSeconds);
-            setFlashOnTimeout(flashOnTimeout);
             setTimeUp(false); // Reset timeUp state when starting a new timer
         };
 
@@ -51,9 +49,9 @@ const Timer = () => {
     };
 
     return (
-        <div className={`flex items-center justify-center h-screen ${timeUp && enableFlash && flashOnTimeout ? 'bg-flash' : 'bg-black'}`}>
+        <div className={`flex items-center justify-center h-screen ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'}`}>
             {timeUp ? (
-                <h1 className={`text-9xl font-black text-white ${enableFlash && flashOnTimeout ? 'animate-flash' : ''}`}>TIME UP!!!</h1>
+                <h1 className={`text-9xl font-black text-white ${enableFlash ? 'animate-flash' : ''}`}>TIME UP!!!</h1>
             ) : (
                 <h1 className="font-black text-white" style={{ fontSize: '10vw' }}>{formatTime(time)}</h1>
             )}

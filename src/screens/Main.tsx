@@ -4,13 +4,12 @@ const Main = () => {
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [enableFlash, setEnableFlash] = useState(true);
-    const [flashOnTimeout, setFlashOnTimeout] = useState(true);
     const minutesRef = useRef<HTMLDivElement>(null);
     const secondsRef = useRef<HTMLDivElement>(null);
 
     const handleStart = () => {
         const totalTimeInSeconds = minutes * 60 + seconds;
-        window.electron.startTimer(totalTimeInSeconds, flashOnTimeout);
+        window.electron.startTimer(totalTimeInSeconds);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, type: "minutes" | "seconds") => {
@@ -64,12 +63,6 @@ const Main = () => {
                     {String(seconds).padStart(2, "0")}
                 </div>
             </div>
-            <button
-                className="bg-blue-500 text-white p-2 rounded mb-4"
-                onClick={() => setFlashOnTimeout(!flashOnTimeout)}
-            >
-                {flashOnTimeout ? "Disable Flash on Timeout" : "Enable Flash on Timeout"}
-            </button>
             <button
                 className="bg-green-500 text-white p-2 rounded mb-4"
                 onClick={handleStart}
