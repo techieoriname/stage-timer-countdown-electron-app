@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fd926606-728f-441e-96d1-ff55a963af37" name="Changes" comment="fix timeout bug">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/electron.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/electron.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/preload.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/preload.ts" afterDir="false" />
+    <list default="true" id="fd926606-728f-441e-96d1-ff55a963af37" name="Changes" comment="add reset timer feature">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/Main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Timer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Timer.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +101,7 @@
       <workItem from="1719243175605" duration="4075000" />
       <workItem from="1719312261601" duration="4430000" />
       <workItem from="1719351276057" duration="1756000" />
-      <workItem from="1719386385073" duration="3387000" />
+      <workItem from="1719386385073" duration="4298000" />
     </task>
     <task id="LOCAL-00001" summary="initial countdown timer app setup">
       <option name="closed" value="true" />
@@ -117,7 +119,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719389221203</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add reset timer feature">
+      <option name="closed" value="true" />
+      <created>1719389883658</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1719389883658</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,7 +136,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial countdown timer app setup" />
     <MESSAGE value="fix timeout bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix timeout bug" />
+    <MESSAGE value="add reset timer feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="add reset timer feature" />
   </component>
   <component name="WfRunsListSearchHistory"><![CDATA[{
   "history": [
@@ -140,4 +151,16 @@
     "currentBranchFilter": true
   }
 }]]></component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/screens/Timer.tsx</url>
+          <line>15</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
 </project>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const Main = () => {
     const [minutes, setMinutes] = useState(0);
@@ -6,16 +6,34 @@ const Main = () => {
     const [enableFlash, setEnableFlash] = useState(true);
     const minutesRef = useRef<HTMLDivElement>(null);
     const secondsRef = useRef<HTMLDivElement>(null);
+    const [focusedInput, setFocusedInput] = useState<"minutes" | "seconds">("minutes");
+
+    useEffect(() => {
+        // Focus on minutes input by default on app launch
+        if (minutesRef.current) {
+            minutesRef.current.focus();
+        }
+    }, []);
 
     const handleStart = () => {
         const totalTimeInSeconds = minutes * 60 + seconds;
         window.electron.startTimer(totalTimeInSeconds);
+        refocusInput();
     };
 
     const handleReset = () => {
         setMinutes(0);
         setSeconds(0);
         window.electron.resetTimer();
+        refocusInput();
+    };
+
+    const refocusInput = () => {
+        if (focusedInput === "minutes" && minutesRef.current) {
+            minutesRef.current.focus();
+        } else if (focusedInput === "seconds" && secondsRef.current) {
+            secondsRef.current.focus();
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, type: "minutes" | "seconds") => {
@@ -37,12 +55,31 @@ const Main = () => {
             } else {
                 setSeconds((prev) => Number(`${prev}`.slice(-1) + e.key));
             }
+        } else if (e.key === "ArrowRight" || e.key === "Tab") {
+            e.preventDefault();
+            if (type === "minutes") {
+                setFocusedInput("seconds");
+                if (secondsRef.current) {
+                    secondsRef.current.focus();
+                }
+            }
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            if (type === "seconds") {
+                setFocusedInput("minutes");
+                if (minutesRef.current) {
+                    minutesRef.current.focus();
+                }
+            }
+        } else if (e.key === "Enter") {
+            handleStart();
         }
     };
 
     const handleFlashToggle = () => {
         setEnableFlash(!enableFlash);
         window.electron.setFlashState(!enableFlash);
+        refocusInput();
     };
 
     return (
@@ -53,7 +90,7 @@ const Main = () => {
                     ref={minutesRef}
                     tabIndex={0}
                     className="p-4 border rounded w-32 text-center bg-white cursor-pointer flex items-center justify-center"
-                    onClick={() => minutesRef.current?.focus()}
+                    onClick={() => setFocusedInput("minutes")}
                     onKeyDown={(e) => handleKeyDown(e, "minutes")}
                 >
                     {String(minutes).padStart(2, "0")}
@@ -63,7 +100,7 @@ const Main = () => {
                     ref={secondsRef}
                     tabIndex={0}
                     className="p-4 border rounded w-32 text-center bg-white cursor-pointer flex items-center justify-center"
-                    onClick={() => secondsRef.current?.focus()}
+                    onClick={() => setFocusedInput("seconds")}
                     onKeyDown={(e) => handleKeyDown(e, "seconds")}
                 >
                     {String(seconds).padStart(2, "0")}
