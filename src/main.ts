@@ -8,7 +8,9 @@ if (require("electron-squirrel-startup")) {
 let timerWindow: BrowserWindow | null = null;
 let mainWindow: BrowserWindow | null = null;
 
-const createMainWindow = () => {
+const createWindows = () => {
+    const displays = screen.getAllDisplays();
+
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -26,57 +28,38 @@ const createMainWindow = () => {
             path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
         );
     }
-};
 
-const createTimerWindow = (display: Electron.Display) => {
-    if (timerWindow) {
-        timerWindow.close();
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //     mainWindow.webContents.openDevTools({ mode: "detach" });
+    // }
 
-    timerWindow = new BrowserWindow({
-        x: display.bounds.x,
-        y: display.bounds.y,
-        width: display.bounds.width,
-        height: display.bounds.height,
-        fullscreen: true,
-        webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
-            contextIsolation: true,
-            nodeIntegration: false,
-        },
-    });
-
-    if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-        timerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}#/timer`);
-    } else {
-        timerWindow.loadURL(
-            `file://${path.join(__dirname, "..", `renderer/${MAIN_WINDOW_VITE_NAME}`, "index.html")}#/timer`
-        );
-    }
-};
-
-const handleDisplays = () => {
-    const displays = screen.getAllDisplays();
     if (displays.length > 1) {
-        createTimerWindow(displays[1]);
-    } else if (timerWindow) {
-        timerWindow.close();
-        timerWindow = null;
+        const externalDisplay = displays[1];
+
+        timerWindow = new BrowserWindow({
+            x: externalDisplay.bounds.x,
+            y: externalDisplay.bounds.y,
+            width: externalDisplay.bounds.width,
+            height: externalDisplay.bounds.height,
+            fullscreen: true,
+            webPreferences: {
+                preload: path.join(__dirname, "preload.js"),
+                contextIsolation: true,
+                nodeIntegration: false,
+            },
+        });
+
+        if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+            timerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}#/timer`);
+        } else {
+            timerWindow.loadURL(
+                `file://${path.join(__dirname, "..", `renderer/${MAIN_WINDOW_VITE_NAME}`, "index.html")}#/timer`
+            );
+        }
     }
 };
 
-app.on("ready", () => {
-    createMainWindow();
-    handleDisplays();
-
-    screen.on("display-added", (event, newDisplay) => {
-        handleDisplays();
-    });
-
-    screen.on("display-removed", () => {
-        handleDisplays();
-    });
-});
+app.on("ready", createWindows);
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
@@ -86,8 +69,7 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        createMainWindow();
-        handleDisplays();
+        createWindows();
     }
 });
 
