@@ -25,7 +25,22 @@
  *  });
  * ```
  */
-import "./app";
+import React from "react";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import "./main.css";
+import Timer from "./screens/Timer";
+import Main from "./screens/Main";
+import { createRoot } from "react-dom/client";
 
-console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+
+const Root = () => (
+    <Router>
+        <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/timer" element={<Timer />} />
+        </Routes>
+    </Router>
+);
+
+createRoot(document.getElementById("root")).render(<Root />);
+console.log("👋 This message is being logged by \"renderer.ts\", included via Vite");
