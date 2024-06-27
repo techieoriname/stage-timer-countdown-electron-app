@@ -4,6 +4,7 @@ const Main = () => {
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [enableFlash, setEnableFlash] = useState(true);
+    const [previewTime, setPreviewTime] = useState(0); // Add state for preview time
     const minutesRef = useRef<HTMLDivElement>(null);
     const secondsRef = useRef<HTMLDivElement>(null);
     const [focusedInput, setFocusedInput] = useState<"minutes" | "seconds">("minutes");
@@ -12,6 +13,13 @@ const Main = () => {
         // Focus on minutes input by default on app launch
         if (minutesRef.current) {
             minutesRef.current.focus();
+        }
+
+        // Listen for time updates from the timer screen
+        if (window.electron?.onTimeUpdate) {
+            window.electron.onTimeUpdate((event, time) => {
+                setPreviewTime(time);
+            });
         }
     }, []);
 
@@ -82,14 +90,20 @@ const Main = () => {
         refocusInput();
     };
 
+    const formatTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
             <h2 className="text-4xl font-black mb-8">Set Timer</h2>
             <div className="flex mb-4 text-6xl font-bold items-center">
                 <div
                     ref={minutesRef}
                     tabIndex={0}
-                    className="p-4 border rounded w-32 text-center bg-white cursor-pointer flex items-center justify-center"
+                    className="p-4 border rounded w-32 text-center bg-gray-800 cursor-pointer flex items-center justify-center"
                     onClick={() => setFocusedInput("minutes")}
                     onKeyDown={(e) => handleKeyDown(e, "minutes")}
                 >
@@ -99,7 +113,7 @@ const Main = () => {
                 <div
                     ref={secondsRef}
                     tabIndex={0}
-                    className="p-4 border rounded w-32 text-center bg-white cursor-pointer flex items-center justify-center"
+                    className="p-4 border rounded w-32 text-center bg-gray-800 cursor-pointer flex items-center justify-center"
                     onClick={() => setFocusedInput("seconds")}
                     onKeyDown={(e) => handleKeyDown(e, "seconds")}
                 >
@@ -124,6 +138,10 @@ const Main = () => {
             >
                 {enableFlash ? "Disable Flash" : "Enable Flash"}
             </button>
+            <div className="mt-8 text-4xl">
+                <h3 className="font-black">Preview Timer</h3>
+                <p className="text-center">{formatTime(previewTime)}</p>
+            </div>
         </div>
     );
 };

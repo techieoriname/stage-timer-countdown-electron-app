@@ -6,17 +6,18 @@ if (require("electron-squirrel-startup")) {
 }
 
 let timerWindow: BrowserWindow | null = null;
+let mainWindow: BrowserWindow | null = null;
 
 const createWindows = () => {
     const displays = screen.getAllDisplays();
 
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
-            nodeIntegration: false,
             contextIsolation: true,
+            nodeIntegration: false,
         },
     });
 
@@ -28,9 +29,9 @@ const createWindows = () => {
         );
     }
 
-    if (process.env.NODE_ENV === "development") {
-        mainWindow.webContents.openDevTools({ mode: "detach" });
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //     mainWindow.webContents.openDevTools({ mode: "detach" });
+    // }
 
     if (displays.length > 1) {
         const externalDisplay = displays[1];
@@ -43,16 +44,16 @@ const createWindows = () => {
             fullscreen: true,
             webPreferences: {
                 preload: path.join(__dirname, "preload.js"),
-                nodeIntegration: false,
                 contextIsolation: true,
+                nodeIntegration: false,
             },
         });
 
         if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-            timerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/timer`);
+            timerWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}#/timer`);
         } else {
-            timerWindow.loadFile(
-                path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/timer.html`)
+            timerWindow.loadURL(
+                `file://${path.join(__dirname, "..", `renderer/${MAIN_WINDOW_VITE_NAME}`, "index.html")}#/timer`
             );
         }
     }
@@ -72,20 +73,26 @@ app.on("activate", () => {
     }
 });
 
-ipcMain.on('start-timer', (event, time) => {
+ipcMain.on('start-timer', (event, { time }) => {
     if (timerWindow) {
-        timerWindow.webContents.send('start-timer', time);
+        timerWindow.webContents.send('start-timer', { time });
     }
 });
-
-ipcMain.on("set-flash-state", (event, state) => {
-    if (timerWindow) {
-        timerWindow.webContents.send('set-flash-state', state);
-    }
-})
 
 ipcMain.on('reset-timer', () => {
     if (timerWindow) {
         timerWindow.webContents.send('reset-timer');
+    }
+});
+
+ipcMain.on('set-flash-state', (event, state) => {
+    if (timerWindow) {
+        timerWindow.webContents.send('set-flash-state', state);
+    }
+});
+
+ipcMain.on('time-update', (event, time) => {
+    if (mainWindow) {
+        mainWindow.webContents.send('time-update', time);
     }
 });

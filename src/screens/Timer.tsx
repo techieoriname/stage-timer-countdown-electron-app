@@ -36,16 +36,19 @@ const Timer = () => {
         if (time > 0) {
             const interval = setInterval(() => {
                 setTime(prevTime => {
-                    if (prevTime > 1) {
-                        return prevTime - 1;
-                    } else {
+                    const newTime = prevTime - 1;
+                    window.electron.sendTimeUpdate(newTime); // Send timer value to main screen
+                    if (newTime <= 0) {
                         setTimeUp(true); // Set time up state when timer reaches zero
                         clearInterval(interval);
                         return 0;
                     }
+                    return newTime;
                 });
             }, 1000);
             return () => clearInterval(interval);
+        } else {
+            window.electron.sendTimeUpdate(0); // Send timer value to main screen when time is zero
         }
     }, [time]);
 
@@ -58,9 +61,9 @@ const Timer = () => {
     return (
         <div className={`flex items-center justify-center h-screen ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'}`}>
             {timeUp ? (
-                <h1 className={`text-9xl font-black text-white ${enableFlash ? 'animate-flash' : ''}`}>TIME UP!!!</h1>
+                <h1 className={`text-[20vh] font-black text-white ${enableFlash ? 'animate-flash' : ''}`}>TIME UP!!!</h1>
             ) : (
-                <h1 className="font-black text-white" style={{ fontSize: '10vw' }}>{formatTime(time)}</h1>
+                <h1 className="font-black text-white" style={{ fontSize: '30vh' }}>{formatTime(time)}</h1>
             )}
         </div>
     );
