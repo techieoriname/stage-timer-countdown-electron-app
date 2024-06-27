@@ -5,6 +5,8 @@
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -28,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "electron": "31.0.2",
+    "electron-builder": "^24.13.3",
     "eslint": "^8.0.1",
     "eslint-plugin-import": "^2.25.0",
     "prettier": "^3.3.2",
