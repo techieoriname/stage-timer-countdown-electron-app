@@ -9,24 +9,38 @@
   },
   "files": [
     ".vite/build/**/*",
-    ".vite/renderer/**/*"
+    ".vite/renderer/**/*",
+    "node_modules/**/*",
+    "package.json"
   ],
-  "win": {
-    "target": [
-      {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
-      }
-    ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
-  },
   "mac": {
     "target": [
       "dmg"
     ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+    "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
+    "extendInfo": {
+      "LSApplicationCategoryType": "public.app-category.utilities"
+    }
+  },
+  "dmg": {
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ],
+    "window": {
+      "width": 540,
+      "height": 380
+    },
+    //    "icon": "build/icon.icns",
+    //    "iconSize": 80
   },
   "nsis": {
     "oneClick": false,
