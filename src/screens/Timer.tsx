@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-interface TimerProps {
-    mini?: boolean;
-    time?: number;
-}
-
-const Timer: React.FC<TimerProps> = ({ mini = false}) => {
+const Timer: React.FC = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [timeUp, setTimeUp] = useState(false);
     const [enableFlash, setEnableFlash] = useState(true);
@@ -13,7 +8,7 @@ const Timer: React.FC<TimerProps> = ({ mini = false}) => {
 
     useEffect(() => {
 
-        const handleStartTimer = (event: Electron.IpcMainEvent, timer: { time: number, activity: string }) => {
+        const handleStartTimer = (_event: Electron.IpcMainEvent, timer: { time: number, activity: string }) => {
             setCurrentTime(timer.time);
             setActivity(timer.activity);
             setTimeUp(false);
@@ -28,7 +23,7 @@ const Timer: React.FC<TimerProps> = ({ mini = false}) => {
         window.electron.onStartTimer(handleStartTimer);
         window.electron.onResetTimer(handleResetTimer);
 
-        const handleFlashStateChange = (event: any, state: boolean) => {
+        const handleFlashStateChange = (_event: Electron.IpcMainEvent, state: boolean) => {
             setEnableFlash(state);
         };
 
@@ -68,11 +63,11 @@ const Timer: React.FC<TimerProps> = ({ mini = false}) => {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const fontSize = mini ? "6vh" : "20vh";
-    const textStyle = mini ? "text-sm" : "text-[14vh]";
+    const fontSize = "20vh";
+    const textStyle = "text-[14vh]";
 
     return (
-        <div className={`flex items-center justify-center ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'} ${mini ? 'h-52' : 'h-screen'}`}>
+        <div className={`flex items-center justify-center h-screen ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'}`}>
             {timeUp ? (
                 <div className="flex flex-col justify-center items-center">
                     <h2 className={`font-bold text-white mt-8 uppercase ${textStyle}`}>{activity}</h2>
