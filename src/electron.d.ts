@@ -1,12 +1,12 @@
 interface ElectronAPI {
-    startTimer: (time: number) => void;
-    onStartTimer: (callback: (event: any, { time }: { time: number }) => void) => void;
+    startTimer: (time: number, activity: string) => void;
+    onStartTimer: (callback: (event: Electron.IpcMainEvent, { time , activity}: { time: number, activity: string }) => void) => void;
     resetTimer: () => void;
     onResetTimer: (callback: () => void) => void;
     setFlashState: (state: boolean) => void;
-    onFlashStateChange: (callback: (event: any, state: boolean) => void) => void;
-    sendTimeUpdate: (time: number) => void; // Add this line
-    onTimeUpdate: (callback: (event: any, time: number) => void) => void; // Add this line
+    onFlashStateChange: (callback: (event: Electron.IpcMainEvent, state: boolean) => void) => void;
+    sendTimeUpdate: (time: number) => void;
+    onTimeUpdate: (callback: (event: Electron.IpcMainEvent, time: number) => void) => void;
 }
 
 interface Window {

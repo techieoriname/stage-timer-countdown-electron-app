@@ -13,7 +13,7 @@ const createWindows = () => {
 
     mainWindow = new BrowserWindow({
         width: 800,
-        height: 600,
+        height: 800,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
@@ -73,9 +73,9 @@ app.on("activate", () => {
     }
 });
 
-ipcMain.on('start-timer', (event, { time }) => {
+ipcMain.on('start-timer', (event,a) => {
     if (timerWindow) {
-        timerWindow.webContents.send('start-timer', { time });
+        timerWindow.webContents.send('start-timer', { time: a.time, activity: a.activity });
     }
 });
 

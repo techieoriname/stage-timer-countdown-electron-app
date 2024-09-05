@@ -3,7 +3,7 @@
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "com.oriname.timerapp",
   "asar": true,
-  "productName": "Timer",
+  "productName": "Timer by Oriname",
   "directories": {
     "output": "release/${version}"
   },
@@ -13,11 +13,15 @@
     "node_modules/**/*",
     "package.json"
   ],
+  "win": {
+    icon: "assets/icon-win.ico"
+  },
   "mac": {
     "target": [
       "dmg"
     ],
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
+    "icon": "assets/icon-mac.icns",
     "extendInfo": {
       "LSApplicationCategoryType": "public.app-category.utilities"
     }
@@ -39,8 +43,8 @@
       "width": 540,
       "height": 380
     },
-    //    "icon": "build/icon.icns",
-    //    "iconSize": 80
+    "icon": "assets/icon-mac.icns",
+    "iconSize": 80
   },
   "nsis": {
     "oneClick": false,

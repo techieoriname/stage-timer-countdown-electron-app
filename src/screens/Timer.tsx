@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
 
-const Timer = () => {
-    const [time, setTime] = useState(0);
+interface TimerProps {
+    mini?: boolean;
+    time?: number;
+}
+
+const Timer: React.FC<TimerProps> = ({ mini = false}) => {
+    const [currentTime, setCurrentTime] = useState(0);
     const [timeUp, setTimeUp] = useState(false);
     const [enableFlash, setEnableFlash] = useState(true);
+    const [activity, setActivity] = useState("");
 
     useEffect(() => {
-        const handleStartTimer = (event: any, { time: totalTimeInSeconds }: { time: number }) => {
-            setTime(totalTimeInSeconds);
-            setTimeUp(false); // Reset timeUp state when starting a new timer
+
+        const handleStartTimer = (event: Electron.IpcMainEvent, timer: { time: number, activity: string }) => {
+            setCurrentTime(timer.time);
+            setActivity(timer.activity);
+            setTimeUp(false);
         };
 
         const handleResetTimer = () => {
-            setTime(0);
+            setCurrentTime(0);
             setTimeUp(false);
+            setActivity("");
         };
 
         window.electron.onStartTimer(handleStartTimer);
@@ -33,13 +42,13 @@ const Timer = () => {
     }, []);
 
     useEffect(() => {
-        if (time > 0) {
+        if (currentTime > 0) {
             const interval = setInterval(() => {
-                setTime(prevTime => {
+                setCurrentTime(prevTime => {
                     const newTime = prevTime - 1;
-                    window.electron.sendTimeUpdate(newTime); // Send timer value to main screen
+                    window.electron.sendTimeUpdate(newTime);
                     if (newTime <= 0) {
-                        setTimeUp(true); // Set time up state when timer reaches zero
+                        setTimeUp(true);
                         clearInterval(interval);
                         return 0;
                     }
@@ -48,22 +57,32 @@ const Timer = () => {
             }, 1000);
             return () => clearInterval(interval);
         } else {
-            window.electron.sendTimeUpdate(0); // Send timer value to main screen when time is zero
+            window.electron.sendTimeUpdate(0);
         }
-    }, [time]);
+    }, [currentTime]);
 
     const formatTime = (seconds: number) => {
+        if (isNaN(seconds)) return "0:00";  // Prevent NaN display
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
+    const fontSize = mini ? "6vh" : "20vh";
+    const textStyle = mini ? "text-sm" : "text-[14vh]";
+
     return (
-        <div className={`flex items-center justify-center h-screen ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'}`}>
+        <div className={`flex items-center justify-center ${timeUp && enableFlash ? 'bg-flash' : 'bg-black'} ${mini ? 'h-52' : 'h-screen'}`}>
             {timeUp ? (
-                <h1 className={`text-[20vh] font-black text-white ${enableFlash ? 'animate-flash' : ''}`}>TIME UP!!!</h1>
+                <div className="flex flex-col justify-center items-center">
+                    <h2 className={`font-bold text-white mt-8 uppercase ${textStyle}`}>{activity}</h2>
+                    <h1 className={`font-black text-white ${enableFlash ? 'animate-flash' : ''}`} style={{ fontSize }}>TIME UP!!!</h1>
+                </div>
             ) : (
-                <h1 className="font-black text-white" style={{ fontSize: '30vh' }}>{formatTime(time)}</h1>
+                <div className="flex flex-col justify-center items-center">
+                    <h2 className={`font-bold text-white mt-8 uppercase ${textStyle}`}>{activity}</h2>
+                    <h1 className="font-black text-white" style={{ fontSize }}>{formatTime(currentTime)}</h1>
+                </div>
             )}
         </div>
     );
