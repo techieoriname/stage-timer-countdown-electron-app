@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import Timer from "./Timer";
 import Tippy from "@tippyjs/react";
+import MiniTimer from "../components/MiniTimer";
 
 const Main = () => {
     const [minutes, setMinutes] = useState(0);
@@ -13,18 +13,65 @@ const Main = () => {
     const minutesRef = useRef<HTMLDivElement>(null);
     const secondsRef = useRef<HTMLDivElement>(null);
     const [focusedInput, setFocusedInput] = useState<"minutes" | "seconds">("minutes");
+    const [currentTime, setCurrentTime] = useState(0);
+    const [activity, setActivity] = useState("");
+    const [timeUp, setTimeUp] = useState(false);
+
+    useEffect(() => {
+        // Listen for real-time updates from the Timer screen
+        if (window.electron?.onTimeUpdate) {
+            window.electron.onTimeUpdate((event, time) => {
+                setCurrentTime(time);
+                if (time <= 0) setTimeUp(true);
+            });
+        }
+
+        // Listen for start timer event
+        if (window.electron?.onStartTimer) {
+            window.electron.onStartTimer((_event, { time, activity }) => {
+                setActivity(activity);
+                setCurrentTime(time);
+                setTimeUp(false);
+            });
+        }
+
+        // Listen for reset timer event
+        if (window.electron?.onResetTimer) {
+            window.electron.onResetTimer(() => {
+                setCurrentTime(0);
+                setActivity("");
+                setTimeUp(false);
+            });
+        }
+
+        // Listen for flash state change
+        if (window.electron?.onFlashStateChange) {
+            window.electron.onFlashStateChange((_event, state) => {
+                setEnableFlash(state);
+            });
+        }
+
+        // Clean up the event listeners on unmount
+        return () => {
+            if (window.electron?.onTimeUpdate) {
+                window.electron.onTimeUpdate(null);
+            }
+            if (window.electron?.onStartTimer) {
+                window.electron.onStartTimer(null);
+            }
+            if (window.electron?.onResetTimer) {
+                window.electron.onResetTimer(null);
+            }
+            if (window.electron?.onFlashStateChange) {
+                window.electron.onFlashStateChange(null);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         if (minutesRef.current) {
             minutesRef.current.focus();
         }
-
-        // Listen for time updates from the timer screen
-        // if (window.electron?.onTimeUpdate) {
-        //     window.electron.onTimeUpdate((event, time) => {
-        //         setPreviewTime(time);
-        //     });
-        // }
     }, []);
 
     useEffect(() => {
@@ -38,6 +85,8 @@ const Main = () => {
     const handleStart = () => {
         if (activeActivity) {
             const totalTimeInSeconds = minutes * 60 + seconds;
+            setTimeUp(false);
+            setActivity(activeActivity);
             window.electron.startTimer(totalTimeInSeconds, activeActivity);
         } else {
             if (activities.length === 0) {
@@ -52,6 +101,8 @@ const Main = () => {
     const handleReset = () => {
         setMinutes(0);
         setSeconds(0);
+        setTimeUp(false);
+        setActivity("");
         window.electron.resetTimer();
         refocusInput();
     };
@@ -64,7 +115,10 @@ const Main = () => {
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, type: "minutes" | "seconds") => {
+    const handleKeyDown = (
+        e: React.KeyboardEvent<HTMLDivElement>,
+        type: "minutes" | "seconds"
+    ) => {
         if (e.key === "ArrowUp") {
             if (type === "minutes") {
                 setMinutes((prev) => Math.min(prev + 1, 59));
@@ -132,13 +186,6 @@ const Main = () => {
         setInputValue(e.target.value);
     };
 
-    const formatTime = (seconds: number) => {
-        if (isNaN(seconds)) return "0:00";
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return `${m}:${s < 10 ? "0" : ""}${s}`;
-    };
-
     const clickInput = () => {
         inputRef.current?.focus();
     };
@@ -171,19 +218,25 @@ const Main = () => {
                     onClick={clickInput}
                 >
                     {activities.map((activity, index) => (
-                        <div key={index}
-                             className={`flex items-center bg-gray-700 text-gray-300 rounded px-2 py-1 m-1 text-xs cursor-pointer 
+                        <div
+                            key={index}
+                            className={`flex items-center bg-gray-700 text-gray-300 rounded px-2 py-1 m-1 text-xs cursor-pointer 
                              ${activity === activeActivity ? "!bg-blue-500 text-white" : ""}`}
-                             onClick={() => selectActivity(activity)}
+                            onClick={() => selectActivity(activity)}
                         >
                             {activity}
-                            {activity === activeActivity && <span className="text-xs ml-2">▶</span>}
+                            {activity === activeActivity && (
+                                <span className="text-xs ml-2">▶</span>
+                            )}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation(); // Prevent the activity selection event from firing when removing
                                     removeActivity(index);
                                 }}
-                                className="text-red-500 text-sm ml-2 cursor-default" title="Remove activity">×
+                                className="text-red-500 text-sm ml-2 cursor-default"
+                                title="Remove activity"
+                            >
+                                ×
                             </button>
                         </div>
                     ))}
@@ -225,7 +278,13 @@ const Main = () => {
             </div>
             <div className="mt-8 text-4xl w-3/6">
                 <h3 className="font-black text-center mb-2">Preview</h3>
-                <Timer mini={true} />
+                <MiniTimer
+                    activity={activity}
+                    enableFlash={enableFlash}
+                    currentTime={currentTime}
+                    timeUp={timeUp}
+                    mini={true}
+                />
             </div>
         </div>
     );
