@@ -8,9 +8,11 @@ if (require("electron-squirrel-startup")) {
 let timerWindow: BrowserWindow | null = null;
 let mainWindow: BrowserWindow | null = null;
 
+// Create the main window and optionally the timer window if a second display is available
 const createWindows = () => {
     const displays = screen.getAllDisplays();
 
+    // Create the main window
     mainWindow = new BrowserWindow({
         width: 800,
         height: 800,
@@ -29,13 +31,15 @@ const createWindows = () => {
         );
     }
 
-    // if (process.env.NODE_ENV === "development") {
-    //     mainWindow.webContents.openDevTools({ mode: "detach" });
-    // }
-
+    // If there is more than one display, create the timer window
     if (displays.length > 1) {
-        const externalDisplay = displays[1];
+        createTimerWindow(displays[1]);
+    }
+};
 
+// Function to create the timer window on a given display
+const createTimerWindow = (externalDisplay: Electron.Display) => {
+    if (!timerWindow) {
         timerWindow = new BrowserWindow({
             x: externalDisplay.bounds.x,
             y: externalDisplay.bounds.y,
@@ -59,7 +63,24 @@ const createWindows = () => {
     }
 };
 
-app.on("ready", createWindows);
+app.on("ready", () => {
+    createWindows();
+
+    // Handle display-added event (when a new display is connected)
+    screen.on("display-added", (event, newDisplay) => {
+        if (!timerWindow && screen.getAllDisplays().length > 1) {
+            createTimerWindow(newDisplay);
+        }
+    });
+
+    // Handle display-removed event (when a display is disconnected)
+    screen.on("display-removed", () => {
+        if (screen.getAllDisplays().length <= 1 && timerWindow) {
+            timerWindow.close();
+            timerWindow = null;
+        }
+    });
+});
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
@@ -73,7 +94,8 @@ app.on("activate", () => {
     }
 });
 
-ipcMain.on('start-timer', (event,a) => {
+// IPC communication for the timer window
+ipcMain.on('start-timer', (event, a) => {
     if (timerWindow) {
         timerWindow.webContents.send('start-timer', { time: a.time, activity: a.activity });
     }
